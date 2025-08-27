@@ -120,6 +120,10 @@ services:
     networks:
       - backend
     command: redis-server --bind 0.0.0.0
+
+    volumes:
+      - redis-data:/data
+
     logging:
       driver: "json-file"
       options:
@@ -132,6 +136,8 @@ services:
     networks:
       - backend
     command: rabbitmq-server
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "check_running"]
       interval: 5s
@@ -151,6 +157,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-postgres}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - backend
     logging:
@@ -163,3 +171,9 @@ services:
 networks:
   backend:
     driver: bridge
+
+
+volumes:
+  redis-data:
+  postgres-data:
+  rabbitmq-data:
